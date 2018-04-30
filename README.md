@@ -51,4 +51,4 @@ for line in infile:
 if cpr !='':
 	people[cpr]={"name": name, "last_name": last_name, "height": height, "weight": weight, "blood_type": blood_type, "children": children}
 print(people)
-close.infile()
+infile.close()
