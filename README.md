@@ -50,5 +50,49 @@ for line in infile:
 		blood_type = ''
 if cpr !='':
 	people[cpr]={"name": name, "last_name": last_name, "height": height, "weight": weight, "blood_type": blood_type, "children": children}
-print(people)
 infile.close()
+cpr_list=list(people.keys())
+women = 0
+men = 0
+age20= 0
+age30 =0
+age40= 0
+age50=0
+age60=0
+age70=0
+age80=0
+age80over=0
+for i in cpr_list:
+	age= 2018 - (1900 +int(i[4:6]))
+	if int(age) <=20:
+		age20 +=1
+	if age <=30 and age >20:
+		age30 +=1
+	if age <=40 and age >30:
+		age40 +=1
+	if age <=50 and age >40:
+		age50 +=1
+	if age <=60 and age >50:
+		age60 +=1
+	if age <=70 and age >60:
+		age70 +=1
+	if age <=80 and age >70:
+		age80 +=1
+	if age >80:
+		age80over +=1	
+	if int(i[-1]) % 2 == 0:
+		women +=1
+	if int(i[-1]) % 2 == 1:
+		men +=1
+		chi = people[i]["children"]
+		non_fathers= list()
+		if chi == 'None':
+			non_fathers
+print(non_fathers)
+
+
+
+	
+	
+	
+	
