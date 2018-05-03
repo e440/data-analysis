@@ -62,8 +62,21 @@ age60=0
 age70=0
 age80=0
 age80over=0
+non_fathers= list()
+fathers = list()
+non_mothers= list()
+mothers = list()
 for i in cpr_list:
 	age= 2018 - (1900 +int(i[4:6]))
+	age_sum = age_sum + age
+	if age_min == '':
+		age_min = age
+	elif age < age_min:
+		age_min = age
+	if age_max == '':
+		age_max = age
+	elif age > age_max:
+		age_max = age 
 	if int(age) <=20:
 		age20 +=1
 	if age <=30 and age >20:
@@ -82,17 +95,15 @@ for i in cpr_list:
 		age80over +=1	
 	if int(i[-1]) % 2 == 0:
 		women +=1
+		chi = people[i]["children"]
+		if chi == 'None':
+			non_mothers[-1:-1] = [i]
+		else:
+			mothers[-1:-1] = [i]
 	if int(i[-1]) % 2 == 1:
 		men +=1
 		chi = people[i]["children"]
-		non_fathers= list()
 		if chi == 'None':
-			non_fathers
-print(non_fathers)
-
-
-
-	
-	
-	
-	
+			non_fathers[-1:-1] = [i]
+		else:
+			fathers[-1:-1] = [i]
