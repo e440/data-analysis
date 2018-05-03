@@ -64,10 +64,34 @@ age80over=0
 age_sum = 0
 age_min = ''
 age_max = ''
+m_age20= 0
+m_age30 =0
+m_age40= 0
+m_age50=0
+m_age60=0
+m_age70=0
+m_age80=0
+m_age80over=0
+m_age_sum = 0
+m_age_min = ''
+m_age_max = ''
+f_age20= 0
+f_age30 =0
+f_age40= 0
+f_age50=0
+f_age60=0
+f_age70=0
+f_age80=0
+f_age80over=0
+f_age_sum = 0
+f_age_min = ''
+f_age_max = ''
 non_fathers= list()
 fathers = list()
 non_mothers= list()
 mothers = list()
+first_born = list()
+children_set = set()
 # control age ranges 
 for i in cpr_list:
 	age= 2018 - (1900 +int(i[4:6]))
@@ -104,6 +128,45 @@ for i in cpr_list:
 			non_mothers[-1:-1] = [i]
 		else:
 			mothers[-1:-1] = [i]
+			first_born_date = ''
+			motherhood_age = ''
+			first_child = ''
+			for a in chi:
+				children_set.add(a)
+				if first_born_date != '' and int(a[4:6]) < first_born:
+					first_born_date = int(a[4:6])
+					motherhood_age =  int(a[4:6]) - int(i[4:6])
+					first_child = a
+				else:
+					motherhood_age =  int(a[4:6]) - int(i[4:6])
+					first_child = a
+			first_born[-1:-1] = [first_child]
+			f_age_sum = f_age_sum + motherhood_age
+			if f_age_min == '':
+				f_age_min = motherhood_age
+			elif motherhood_age < f_age_min:
+				f_age_min = motherhood_age
+			if f_age_max == '':
+				f_age_max = motherhood_age
+			elif motherhood_age > f_age_max:
+				f_age_max = motherhood_age 
+			if motherhood_age <=20:
+				f_age20 +=1
+			if motherhood_age <=30 and motherhood_age >20:
+				f_age30 +=1
+			if motherhood_age <=40 and motherhood_age >30:
+				f_age40 +=1
+			elif motherhood_age <=50 and motherhood_age >40:
+				f_age50 +=1
+			elif motherhood_age <=60 and motherhood_age >50:
+				f_age60 +=1
+			elif motherhood_age <=70 and motherhood_age >60:
+				f_age70 +=1
+			elif motherhood_age <=80 and motherhood_age >70:
+				f_age80 +=1
+			elif motherhood_age >80:
+				f_age80over +=1
+	
 # and the same for males
 	elif int(i[-1]) % 2 == 1:
 		men +=1
@@ -112,9 +175,60 @@ for i in cpr_list:
 			non_fathers[-1:-1] = [i]
 		else:
 			fathers[-1:-1] = [i]
-			first_born = ''
-			first_born_age = ''
+			first_born_date = ''
+			fatherhood_age = ''
+			first_child = ''
 			for a in chi:
-				if first_born != '' and int(a[4:6]) < first_born:
-					first_born = int(a[4:6])
-					first_born_age =  int(a[4:6]) - int(i[4:6]
+				children_set.add(a)
+				if first_born_date != '' and int(a[4:6]) < first_born:
+					first_born_date = int(a[4:6])
+					fatherhood_age =  int(a[4:6]) - int(i[4:6])
+					first_child = a
+				else:
+					fatherhood_age =  int(a[4:6]) - int(i[4:6])
+					first_child = a
+			first_born[-1:-1] = [first_child]
+			m_age_sum = m_age_sum + fatherhood_age
+			if m_age_min == '':
+				m_age_min = fatherhood_age
+			elif fatherhood_age < m_age_min:
+				m_age_min = fatherhood_age
+			if m_age_max == '':
+				m_age_max = fatherhood_age
+			elif fatherhood_age > m_age_max:
+				m_age_max = fatherhood_age 
+			if fatherhood_age <=20:
+				m_age20 +=1
+			if fatherhood_age <=30 and fatherhood_age >20:
+				m_age30 +=1
+			if fatherhood_age <=40 and fatherhood_age >30:
+				m_age40 +=1
+			elif fatherhood_age <=50 and fatherhood_age >40:
+				m_age50 +=1
+			elif fatherhood_age <=60 and fatherhood_age >50:
+				m_age60 +=1
+			elif fatherhood_age <=70 and fatherhood_age >60:
+				m_age70 +=1
+			elif fatherhood_age <=80 and fatherhood_age >70:
+				m_age80 +=1
+			elif fatherhood_age >80:
+				m_age80over +=1
+children = {}
+# Checking motherhood age
+print(len(children_set))
+
+
+
+#print(age_min)
+#print(age_max)
+#print(age_sum)
+#average = age_sum / len(cpr_list)
+#print(average)
+
+
+
+	
+	
+	
+	
+
