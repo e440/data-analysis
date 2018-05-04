@@ -90,8 +90,9 @@ non_fathers= list()
 fathers = list()
 non_mothers= list()
 mothers = list()
-first_born = list()
+first_born = set()
 children_set = set()
+children = {}
 # control age ranges 
 for i in cpr_list:
 	age= 2018 - (1900 +int(i[4:6]))
@@ -140,7 +141,7 @@ for i in cpr_list:
 				else:
 					motherhood_age =  int(a[4:6]) - int(i[4:6])
 					first_child = a
-			first_born[-1:-1] = [first_child]
+			first_born.add(first_child)
 			f_age_sum = f_age_sum + motherhood_age
 			if f_age_min == '':
 				f_age_min = motherhood_age
@@ -187,7 +188,7 @@ for i in cpr_list:
 				else:
 					fatherhood_age =  int(a[4:6]) - int(i[4:6])
 					first_child = a
-			first_born[-1:-1] = [first_child]
+			first_born.add(first_child)
 			m_age_sum = m_age_sum + fatherhood_age
 			if m_age_min == '':
 				m_age_min = fatherhood_age
@@ -213,22 +214,106 @@ for i in cpr_list:
 				m_age80 +=1
 			elif fatherhood_age >80:
 				m_age80over +=1
-children = {}
-# Checking motherhood age
-print(len(children_set))
-
-
-
-#print(age_min)
-#print(age_max)
-#print(age_sum)
-#average = age_sum / len(cpr_list)
-#print(average)
-
-
-
-	
-	
-	
-	
-
+# task 7
+for b in children_set:
+	children[b] = {"mother": '', "father": ''}
+for c in fathers:
+	ch = people[c]["children"]
+	for d in ch:
+		children[d]["father"] = c
+for e in mothers:
+	ds = people[e]["children"]
+	for f in ds:
+		children[f]["mother"] = e
+couples = set()
+for g in children:
+	fath = children[g]["father"]
+	moth = children[g]["mother"]
+	parents = fath, moth
+	couples.add(parents)
+agedifference = 0
+for h in couples:
+	difference = abs(int(h[0][4:6]) - int(h[1][4:6]))
+	agedifference = agedifference + difference
+# task 8
+parents_list = fathers + mothers
+grand_children = set()
+gr = 0
+for j in parents_list:
+	if j in children_set:
+		grands= people[j]["children"]
+		for gr in grands:
+			grand_children.add(gr)
+# task 9
+cousins_sum = 0
+cousin_owners = 0
+for honey in grand_children:
+	cousins_set = set()
+	mor= children[honey]["mother"]
+	if mor in children:
+		mormor = children[mor]["mother"]
+		mormor_children= people[mormor]["children"]
+		for sb in mormor_children:
+			if sb != mor:
+				cousins= people[sb]["children"]
+				if cousins != 'None':
+					for cousin in cousins:
+						cousins_set.add(cousin)
+		morfar = children[mor]["father"]
+		morfar_children= people[morfar]["children"]
+		for sbl in morfar_children:
+			if sbl != mor:
+				cousins= people[sbl]["children"]
+				if cousins != 'None':
+					for cousin in cousins:
+						cousins_set.add(cousin)					
+	far= children[honey]["father"]
+	if far in children:
+		farmor = children[far]["mother"]
+		farmor_children = people[farmor]["children"]
+		for sb in farmor_children:
+			if sb != far:
+				cousins = people[sb]["children"]
+				if cousins != 'None':
+					for cousin in cousins:
+						cousins_set.add(cousin)
+		farfar = children[far]["father"]
+		farfar_children = people[farfar]["children"]
+		for sbl in farfar_children:
+			if sbl != far:
+				cousins = people[sbl]["children"]
+				if cousins != 'None':
+					for cousin in cousins:
+						cousins_set.add(cousin)
+	if cousins_set != set():
+		cousins_sum= cousins_sum + (len(cousins_set))
+		cousin_owners += 1
+avg_cousins = cousins_sum / cousin_owners
+# task 10
+boys = 0
+girls = 0 
+for first in first_born:
+	if int(first[-1]) % 2 == 1:
+		boys +=1
+	elif int(first[-1]) % 2 == 0:
+		girls +=1
+# task 11
+duo_fathers = 0
+duo_mothers = 0
+for father in fathers:
+	mama = set()
+	kids = people[father]["children"]
+	if len(kids) > 1:
+		for kid in kids:
+			mama.add(children[kid]["mother"])
+	if len(mama) >1 :
+		duo_fathers += 1
+for mother in mothers:
+	papa = set()
+	kids = people[mother]["children"]
+	if len(kids) > 1:
+		for kid in kids:
+			papa.add(children[kid]["father"])
+	if len(papa) > 1:
+		duo_mothers += 1
+# task 12
