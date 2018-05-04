@@ -317,3 +317,37 @@ for mother in mothers:
 	if len(papa) > 1:
 		duo_mothers += 1
 # task 12
+share = set()
+for k in children: 
+	mother = children[k]["mother"]
+	father = children[k]["father"]
+	mot_surname = people[mother]["last_name"]
+	fat_surname = people[father]["last_name"]
+	if mot_surname == fat_surname:
+		couple = father, mother
+		share.add(couple)
+none_of = 0
+from_man= 0
+from_woman = 0
+for l in share:
+	ff_surname = ''
+	mf_surname = ''
+	if l[0] in children_set:
+		farfar = children[l[0]]["father"]
+		ff_surname = people[farfar]["last_name"]
+	if l[1] in children_set:
+		morfar = children[l[1]]["father"]
+		mf_surname = people[morfar]["last_name"]
+	if mf_surname != '' and ff_surname != '' and mf_surname == ff_surname:
+		none_of += 1
+	elif mf_surname != '' and ff_surname != '' and mf_surname != ff_surname:
+		if mf_surname == people[l[0]]["last_name"]:
+			from_woman += 1
+		elif ff_surname == people[l[0]]["last_name"]:
+			from_man += 1
+	elif mf_surname == '' and ff_surname != '' and mf_surname != ff_surname:
+		if ff_surname == people[l[0]]["last_name"]:
+			from_man += 1
+	elif ff_surname == '' and mf_surname != '' and mf_surname != ff_surname:
+		if mf_surname == people[l[0]]["last_name"]:
+			from_woman += 1
