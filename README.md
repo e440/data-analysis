@@ -51,8 +51,8 @@ if cpr !='':
 infile.close()
 cpr_list=list(people.keys())
 # define ranges, lists 
-women = 0
-men = 0
+sum_women = 0
+sum_men = 0
 age20= 0
 age30 =0
 age40= 0
@@ -121,9 +121,9 @@ for i in cpr_list:
 		age80 +=1
 	elif age >80:
 		age80over +=1	
-# and gender and ıf has chıldren for females and fırstborn child
+# and gender and if has children for females and firstborn child
 	if int(i[-1]) % 2 == 0:
-		women +=1
+		sum_women +=1
 		chi = people[i]["children"]
 		if chi == 'None':
 			non_mothers[-1:-1] = [i]
@@ -170,7 +170,7 @@ for i in cpr_list:
 	
 # and the same for males
 	elif int(i[-1]) % 2 == 1:
-		men +=1
+		sum_men +=1
 		chi = people[i]["children"]
 		if chi == 'None':
 			non_fathers[-1:-1] = [i]
@@ -351,7 +351,7 @@ for l in share:
 	elif ff_surname == '' and mf_surname != '' and mf_surname != ff_surname:
 		if mf_surname == people[l[0]]["last_name"]:
 			from_woman += 1
-#task 13 and 14
+#task 13-16
 tall_tall = 0
 tall_normal = 0
 tall_short = 0
@@ -360,11 +360,25 @@ normal_normal = 0
 short_short = 0 
 tall_kids = 0
 kids_from_talls = 0
+fat_fat = 0
+fat_normal = 0
+fat_slim = 0
+normals = 0 
+normal_slim = 0
+slim_slim = 0
+fat_kids = 0
+kids_from_fats = 0
 for m in couples:
 	man = ''
 	man_height = int(people[m[0]]["height"])
 	woman = ''
 	woman_height = int(people[m[1]]["height"])
+	man_w = ''
+	man_weight = int(people[m[0]]["weight"])
+	woman_w = ''
+	woman_weight = int(people[m[0]]["weight"])
+	BMI_woman = woman_weight/((woman_height/100)**2)
+	BMI_man = man_weight/((man_height/100)**2)
 	if man_height >= 185:
 		man = 'tall'
 	elif 185 > man_height >= 175:
@@ -385,7 +399,7 @@ for m in couples:
 			kid_height = int(people[kid]['height'])
 			if int(kid[-1]) % 2 == 0 and kid_height >= 180:
 				tall_kids += 1
-			if int(i[-1]) % 2 == 1 and kid_height >= 185:
+			elif int(kid[-1]) % 2 == 1 and kid_height >= 185:
 				tall_kids += 1
 	elif man == 'tall' and woman == 'normal' or man == 'normal' and woman == 'tall':
 		tall_normal += 1
@@ -397,7 +411,54 @@ for m in couples:
 		normal_normal += 1
 	elif man == 'short' and woman == 'short':
 		short_short += 1
-print(tall_kids, kids_from_talls)
+	if BMI_man <= 18.5:
+		man_w = 'slim'
+	elif 18.5 <  BMI_man <= 25:
+		man_w = 'normal'
+	elif BMI_man > 25:
+		man_w = 'fat'
+	if BMI_woman <= 18.5:
+		woman_w = 'slim'
+	elif 18.5 <  BMI_woman <= 25:
+		woman_w = 'normal'
+	elif BMI_woman > 25:
+		woman_w = 'fat'
+	if man_w == 'fat' and woman_w == 'fat':
+		fat_fat += 1
+		kids = people[m[0]]['children']
+		for kid in kids:
+			kids_from_fats += 1
+			kid_height = int(people[kid]['height'])
+			kid_weight = int(people[kid]['weight'])
+			BMI_kid = kid_weight/((kid_height/100)**2)
+			if BMI_kid > 25:
+				fat_kids += 1
+	elif man_w == 'fat' and woman_w == 'normal' or man_w == 'normal' and woman_w == 'fat':
+		fat_normal += 1
+	elif man_w == 'fat' and woman_w == 'slim' or man_w == 'slim' and woman_w == 'fat':
+		fat_slim += 1
+	elif man_w == 'normal' and woman_w =='slim' or man_w == 'slim' and woman_w == 'normal':
+		normal_slim += 1
+	elif man_w == 'normal' and woman_w == 'normal':
+		normals += 1
+	elif man_w == 'slim' and woman_w == 'slim':
+		slim_slim += 1
+# task 17 
+adopted = list()
+for n in children:
+	child_blood = people[n]['blood_type']
+	mother_blood = people[children[n]['mother']]['blood_type']
+	father_blood = people[children[n]['father']]['blood_type']
+	if ((mother_blood[:-1] == 'A' and father_blood[:-1] == 'A') or ( mother_blood == 'A' and father_blood[:-1] == 'O') or ( mother_blood[:-1] == 'O' and father_blood[:-1] == 'A')) and ( child_blood[:-1] == 'B' or child_blood[:-1] == 'AB'):
+		adopted[-1:-1] = [n]
+	elif ((mother_blood[:-1] == 'B' and father_blood[:-1] == 'B') or ( mother_blood == 'B' and father_blood[:-1] == 'O') or ( mother_blood[:-1] == 'O' and father_blood[:-1] == 'B')) and ( child_blood[:-1] == 'A' or child_blood[:-1] == 'AB'):
+		adopted[-1:-1] = [n]
+	elif (mother_blood[:-1] == 'O' and father_blood[:-1] == 'O') and (child_blood[:-1] == 'A' or child_blood[:-1] == 'B' or child_blood[:-1] == 'AB'):
+		adopted[-1:-1] = [n]
+	elif ((mother_blood[:-1] == 'AB' and father_blood[:-1] == 'AB') or ( mother_blood == 'AB' and father_blood[:-1] == 'O') or ( mother_blood[:-1] == 'O' and father_blood[:-1] == 'AB')) and ( child_blood[:-1] == 'O' ):
+		adopted[-1:-1] = [n]
+	elif mother_blood[-1] == '-' and father_blood[-1] == '-' and child_blood[-1] == '+':
+		adopted[-1:-1] = [n]
 #print(age_min)
 #print(age_max)
 #print(age_sum)
