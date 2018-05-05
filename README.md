@@ -351,3 +351,55 @@ for l in share:
 	elif ff_surname == '' and mf_surname != '' and mf_surname != ff_surname:
 		if mf_surname == people[l[0]]["last_name"]:
 			from_woman += 1
+#task 13 and 14
+tall_tall = 0
+tall_normal = 0
+tall_short = 0
+normal_short = 0
+normal_normal = 0
+short_short = 0 
+tall_kids = 0
+kids_from_talls = 0
+for m in couples:
+	man = ''
+	man_height = int(people[m[0]]["height"])
+	woman = ''
+	woman_height = int(people[m[1]]["height"])
+	if man_height >= 185:
+		man = 'tall'
+	elif 185 > man_height >= 175:
+		man = 'normal'
+	elif 175 > man_height:
+		man = 'short'
+	if woman_height >= 180:
+		woman = 'tall'
+	elif 180 > woman_height >= 170:
+		woman = 'normal'
+	elif 170 > woman_height:
+		woman = 'short'
+	if man == 'tall' and woman == 'tall':
+		tall_tall += 1
+		kids = people[m[0]]['children']
+		for kid in kids:
+			kids_from_talls += 1
+			kid_height = int(people[kid]['height'])
+			if int(kid[-1]) % 2 == 0 and kid_height >= 180:
+				tall_kids += 1
+			if int(i[-1]) % 2 == 1 and kid_height >= 185:
+				tall_kids += 1
+	elif man == 'tall' and woman == 'normal' or man == 'normal' and woman == 'tall':
+		tall_normal += 1
+	elif man == 'tall' and woman == 'short' or man == 'short' and woman == 'tall':
+		tall_short += 1
+	elif man == 'normal' and woman =='short' or man == 'short' and woman == 'normal':
+		normal_short += 1
+	elif man == 'normal' and woman == 'normal':
+		normal_normal += 1
+	elif man == 'short' and woman == 'short':
+		short_short += 1
+print(tall_kids, kids_from_talls)
+#print(age_min)
+#print(age_max)
+#print(age_sum)
+#average = age_sum / len(cpr_list)
+#print(average)
