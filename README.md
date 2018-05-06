@@ -443,8 +443,9 @@ for m in couples:
 		normals += 1
 	elif man_w == 'slim' and woman_w == 'slim':
 		slim_slim += 1
-# task 17 
+# task 17 and 18
 adopted = list()
+donor_fathers= {}
 for n in children:
 	child_blood = people[n]['blood_type']
 	mother_blood = people[children[n]['mother']]['blood_type']
@@ -459,6 +460,183 @@ for n in children:
 		adopted[-1:-1] = [n]
 	elif mother_blood[-1] == '-' and father_blood[-1] == '-' and child_blood[-1] == '+':
 		adopted[-1:-1] = [n]
+	if int(n[-1]) % 2 == 1 and ((child_blood[-1] == '+') or (father_blood[-1] == '-' and child_blood[-1] == '-')) :
+		if father_blood[:-1] == 'A' and (child_blood[:-1] == 'A' or child_blood[:-1] == 'AB'):
+			donor_father= children[n]['father']
+			son = n + ' ' + child_blood
+			if donor_father not in donor_fathers:
+				donor_fathers[donor_father] = { 'father_blood_type': father_blood, 'sons_and_blood_types': [son]}
+			else:
+				donor_fathers[donor_father]['sons_and_blood_types'] += [son]
+		elif father_blood[:-1] == 'B' and (child_blood[:-1] == 'B' or child_blood[:-1] == 'AB'):
+			donor_father= children[n]['father']
+			son = n + ' ' + child_blood
+			if donor_father not in donor_fathers:
+				donor_fathers[donor_father] = { 'father_blood_type': father_blood, 'sons_and_blood_types': [son]}
+			else:
+				donor_fathers[donor_father]['sons_and_blood_types'] += [son]
+		elif father_blood[:-1] == 'AB' and  child_blood[:-1] == 'AB':
+			donor_father= children[n]['father']
+			son = n + ' ' + child_blood
+			if donor_father not in donor_fathers:
+				donor_fathers[donor_father] = { 'father_blood_type': father_blood, 'sons_and_blood_types': [son]}
+			else:
+				donor_fathers[donor_father]['sons_and_blood_types'] += [son]		
+		elif father_blood[:-1] == 'O':
+			donor_father= children[n]['father']
+			son = n + ' ' + child_blood
+			if donor_father not in donor_fathers:
+				donor_fathers[donor_father] = { 'father_blood_type': father_blood, 'sons_and_blood_types': [son]}
+			else:
+				donor_fathers[donor_father]['sons_and_blood_types'] += [son]
+# task 19
+donor_grandchildren = {}
+for o in grand_children:
+	o_blood = people[o]['blood_type']
+	o_father= children[o]['father']
+	o_mother= children[o]['mother']
+	if o_father != 'None' and (o_father in children):
+		o_farfar = children[o_father]['father']
+		o_farmor = children[o_father]['mother']
+		o_farfar_blood = people[o_farfar]['blood_type']
+		o_farmor_blood = people[o_farmor]['blood_type']
+		if  ((o_farfar_blood[-1] == '+') or (o_blood[-1] == '-' and o_blood[-1] == '-')) :
+			if o_blood[:-1] == 'A' and (o_farfar_blood[:-1] == 'A' or o_farfar_blood[:-1] == 'AB'):
+				grandparent = o_farfar + ' ' + o_farfar_blood
+				if o not in donor_grandchildren:
+					donor_grandchildren[o] = { 'grandchildren_blood_type': o_blood, 'grandparents_and_blood_types': [grandparent]}
+				else:
+					donor_grandchildren[o]['grandparents_and_blood_types'] += [grandparent]
+			elif o_blood[:-1] == 'B' and (o_farfar_blood[:-1] == 'B' or o_blood[:-1] == 'AB'):
+				grandparent = o_farfar + ' ' + o_farfar_blood
+				if o not in donor_grandchildren:
+					donor_grandchildren[o] = { 'grandchildren_blood_type': o_blood, 'grandparents_and_blood_types': [grandparent]}
+				else:
+					donor_grandchildren[o]['grandparents_and_blood_types'] += [grandparent]
+			elif o_blood[:-1] == 'AB' and  o_farfar_blood[:-1] == 'AB':
+				grandparent = o_farfar + ' ' + o_farfar_blood
+				if o not in donor_grandchildren:
+					donor_grandchildren[o] = { 'grandchildren_blood_type': o_blood, 'grandparents_and_blood_types': [grandparent]}
+				else:
+					donor_grandchildren[o]['grandparents_and_blood_types'] += [grandparent]		
+			elif o_blood[:-1] == 'O':
+				grandparent = o_farfar + ' ' + o_farfar_blood
+				if o not in donor_grandchildren:
+					donor_grandchildren[o] = { 'grandchildren_blood_type': o_blood, 'grandparents_and_blood_types': [grandparent]}
+				else:
+					donor_grandchildren[o]['grandparents_and_blood_types'] += [grandparent]
+		if  ((o_farmor_blood[-1] == '+') or (o_blood[-1] == '-' and o_blood[-1] == '-')) :
+			if o_blood[:-1] == 'A' and (o_farmor_blood[:-1] == 'A' or o_farmor_blood[:-1] == 'AB'):
+				grandparent = o_farmor + ' ' + o_farmor_blood
+				if o not in donor_grandchildren:
+					donor_grandchildren[o] = { 'grandchildren_blood_type': o_blood, 'grandparents_and_blood_types': [grandparent]}
+				else:
+					donor_grandchildren[o]['grandparents_and_blood_types'] += [grandparent]
+			elif o_blood[:-1] == 'B' and (o_farmor_blood[:-1] == 'B' or o_blood[:-1] == 'AB'):
+				grandparent = o_farmor + ' ' + o_farmor_blood
+				if o not in donor_grandchildren:
+					donor_grandchildren[o] = { 'grandchildren_blood_type': o_blood, 'grandparents_and_blood_types': [grandparent]}
+				else:
+					donor_grandchildren[o]['grandparents_and_blood_types'] += [grandparent]
+			elif o_blood[:-1] == 'AB' and  o_farmor_blood[:-1] == 'AB':
+				grandparent = o_farmor + ' ' + o_farmor_blood
+				if o not in donor_grandchildren:
+					donor_grandchildren[o] = { 'grandchildren_blood_type': o_blood, 'grandparents_and_blood_types': [grandparent]}
+				else:
+					donor_grandchildren[o]['grandparents_and_blood_types'] += [grandparent]		
+			elif o_blood[:-1] == 'O':
+				grandparent = o_farmor + ' ' + o_farmor_blood
+				if o not in donor_grandchildren:
+					donor_grandchildren[o] = { 'grandchildren_blood_type': o_blood, 'grandparents_and_blood_types': [grandparent]}
+				else:
+					donor_grandchildren[o]['grandparents_and_blood_types'] += [grandparent]
+	if o_mother != 'None' and (o_mother in children):
+		o_morfar = children[o_mother]['father']
+		o_mormor = children[o_mother]['mother']
+		o_morfar_blood = people[o_morfar]['blood_type']
+		o_mormor_blood = people[o_mormor]['blood_type']
+		if  ((o_morfar_blood[-1] == '+') or (o_blood[-1] == '-' and o_blood[-1] == '-')) :
+			if o_blood[:-1] == 'A' and (o_morfar_blood[:-1] == 'A' or o_morfar_blood[:-1] == 'AB'):
+				grandparent = o_morfar + ' ' + o_morfar_blood
+				if o not in donor_grandchildren:
+					donor_grandchildren[o] = { 'grandchildren_blood_type': o_blood, 'grandparents_and_blood_types': [grandparent]}
+				else:
+					donor_grandchildren[o]['grandparents_and_blood_types'] += [grandparent]
+			elif o_blood[:-1] == 'B' and (o_morfar_blood[:-1] == 'B' or o_blood[:-1] == 'AB'):
+				grandparent = o_morfar + ' ' + o_morfar_blood
+				if o not in donor_grandchildren:
+					donor_grandchildren[o] = { 'grandchildren_blood_type': o_blood, 'grandparents_and_blood_types': [grandparent]}
+				else:
+					donor_grandchildren[o]['grandparents_and_blood_types'] += [grandparent]
+			elif o_blood[:-1] == 'AB' and  o_morfar_blood[:-1] == 'AB':
+				grandparent = o_morfar + ' ' + o_morfar_blood
+				if o not in donor_grandchildren:
+					donor_grandchildren[o] = { 'grandchildren_blood_type': o_blood, 'grandparents_and_blood_types': [grandparent]}
+				else:
+					donor_grandchildren[o]['grandparents_and_blood_types'] += [grandparent]		
+			elif o_blood[:-1] == 'O':
+				grandparent = o_morfar + ' ' + o_morfar_blood
+				if o not in donor_grandchildren:
+					donor_grandchildren[o] = { 'grandchildren_blood_type': o_blood, 'grandparents_and_blood_types': [grandparent]}
+				else:
+					donor_grandchildren[o]['grandparents_and_blood_types'] += [grandparent]
+		if  ((o_mormor_blood[-1] == '+') or (o_blood[-1] == '-' and o_blood[-1] == '-')) :
+			if o_blood[:-1] == 'A' and (o_mormor_blood[:-1] == 'A' or o_mormor_blood[:-1] == 'AB'):
+				grandparent = o_mormor + ' ' + o_mormor_blood
+				if o not in donor_grandchildren:
+					donor_grandchildren[o] = { 'grandchildren_blood_type': o_blood, 'grandparents_and_blood_types': [grandparent]}
+				else:
+					donor_grandchildren[o]['grandparents_and_blood_types'] += [grandparent]
+			elif o_blood[:-1] == 'B' and (o_mormor_blood[:-1] == 'B' or o_blood[:-1] == 'AB'):
+				grandparent = o_mormor + ' ' + o_mormor_blood
+				if o not in donor_grandchildren:
+					donor_grandchildren[o] = { 'grandchildren_blood_type': o_blood, 'grandparents_and_blood_types': [grandparent]}
+				else:
+					donor_grandchildren[o]['grandparents_and_blood_types'] += [grandparent]
+			elif o_blood[:-1] == 'AB' and  o_mormor_blood[:-1] == 'AB':
+				grandparent = o_mormor + ' ' + o_mormor_blood
+				if o not in donor_grandchildren:
+					donor_grandchildren[o] = { 'grandchildren_blood_type': o_blood, 'grandparents_and_blood_types': [grandparent]}
+				else:
+					donor_grandchildren[o]['grandparents_and_blood_types'] += [grandparent]		
+			elif o_blood[:-1] == 'O':
+				grandparent = o_mormor + ' ' + o_mormor_blood
+				if o not in donor_grandchildren:
+					donor_grandchildren[o] = { 'grandchildren_blood_type': o_blood, 'grandparents_and_blood_types': [grandparent]}
+				else:
+					donor_grandchildren[o]['grandparents_and_blood_types'] += [grandparent]
+# task 20 
+A_pos = 0
+A_neg = 0
+B_pos = 0
+B_neg = 0
+AB_pos = 0
+AB_neg = 0
+O_pos = 0
+O_neg = 0
+for p in people:
+	p_blood = people[p]['blood_type']
+	if p_blood == 'A+':
+		A_pos += 1
+	elif p_blood == 'A-':
+		A_neg += 1
+	elif p_blood == 'B+':
+		B_pos += 1
+	elif p_blood == 'B-':
+		B_neg += 1
+	elif p_blood == 'AB+':
+		AB_pos += 1
+	elif p_blood == 'AB-':
+		AB_neg += 1	
+	if p_blood == 'O+':
+		O_pos += 1
+	elif p_blood == 'O-':
+		O_neg += 1
+
+
+
+
+
 #print(age_min)
 #print(age_max)
 #print(age_sum)
