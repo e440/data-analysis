@@ -67,28 +67,20 @@ age_max = ''
 m_age20= 0
 m_age30 =0
 m_age40= 0
-m_age50=0
-m_age60=0
-m_age70=0
-m_age80=0
-m_age80over=0
+m_age40over=0
 m_age_sum = 0
 m_age_min = ''
 m_age_max = ''
 f_age20= 0
 f_age30 =0
 f_age40= 0
-f_age50=0
-f_age60=0
-f_age70=0
-f_age80=0
-f_age80over=0
+f_age40over=0
 f_age_sum = 0
 f_age_min = ''
 f_age_max = ''
-non_fathers= list()
+non_fathers= 0
 fathers = list()
-non_mothers= list()
+non_mothers= 0
 mothers = list()
 first_born = set()
 children_set = set()
@@ -126,7 +118,7 @@ for i in cpr_list:
 		sum_women +=1
 		chi = people[i]["children"]
 		if chi == 'None':
-			non_mothers[-1:-1] = [i]
+			non_mothers += 1
 		else:
 			mothers[-1:-1] = [i]
 			first_born_date = ''
@@ -158,22 +150,14 @@ for i in cpr_list:
 			if motherhood_age <=40 and motherhood_age >30:
 				f_age40 +=1
 			elif motherhood_age <=50 and motherhood_age >40:
-				f_age50 +=1
-			elif motherhood_age <=60 and motherhood_age >50:
-				f_age60 +=1
-			elif motherhood_age <=70 and motherhood_age >60:
-				f_age70 +=1
-			elif motherhood_age <=80 and motherhood_age >70:
-				f_age80 +=1
-			elif motherhood_age >80:
-				f_age80over +=1
+				f_age40over +=1
 	
 # and the same for males
 	elif int(i[-1]) % 2 == 1:
 		sum_men +=1
 		chi = people[i]["children"]
 		if chi == 'None':
-			non_fathers[-1:-1] = [i]
+			non_fathers += 1
 		else:
 			fathers[-1:-1] = [i]
 			first_born_date = ''
@@ -204,16 +188,18 @@ for i in cpr_list:
 				m_age30 +=1
 			if fatherhood_age <=40 and fatherhood_age >30:
 				m_age40 +=1
-			elif fatherhood_age <=50 and fatherhood_age >40:
-				m_age50 +=1
-			elif fatherhood_age <=60 and fatherhood_age >50:
-				m_age60 +=1
-			elif fatherhood_age <=70 and fatherhood_age >60:
-				m_age70 +=1
-			elif fatherhood_age <=80 and fatherhood_age >70:
-				m_age80 +=1
 			elif fatherhood_age >80:
-				m_age80over +=1
+				m_age40over +=1
+print('Total number of men and women:', sum_men, 'and', sum_women)
+print('Average age is:', age_sum / len(people))
+print('Minimum and maximum age :', age_min, 'and', age_max)
+print('Age distribution is:','\n', 'Age <= 20: %',(age20*100)/len(people), '\n', '20<age<=30: %', (age30*100)/len(people), '\n', '30<age<=40: %', (age40*100)/len(people), '\n', '40<age<=50: %', (age50*100)/len(people), '\n', '50<age<=60: %', (age60*100)/len(people), '\n', '60<age<=70: %', (age70*100)/len(people), '\n', '70<age<=80: %', (age80*100)/len(people), '\n', 'age< 80: %', (age80over*100)/len(people))
+print('Minimum, Maximum and Average Fatherhood age:', m_age_min, m_age_max, (m_age_sum / len(fathers)))
+print('Minimum, Maximum and Average Mottherhood age:', f_age_min, f_age_max, (f_age_sum / len(mothers)))
+print('Age distribution of fatherhood:','\n', 'Age <= 20: %',(m_age20*100)/len(fathers), '\n', '20<age<=30: %', (m_age30*100)/len(fathers), '\n', '30<age<=40: %', (m_age40*100)/len(fathers), '\n', '40<age %', (m_age40over*100)/len(fathers)) 
+print('Age distribution of motherhood:','\n', 'Age <= 20: %',(f_age20*100)/len(mothers), '\n', '20<age<=30: %', (f_age30*100)/len(mothers), '\n', '30<age<=40: %', (f_age40*100)/len(mothers), '\n', '40<age %', (f_age40over*100)/len(mothers)) 
+print((non_fathers*100)/sum_men, ' percentage of men do not have children')
+print((non_mothers*100)/sum_women, ' percentage of women do not have children')
 # task 7
 for b in children_set:
 	children[b] = {"mother": '', "father": ''}
@@ -235,6 +221,7 @@ agedifference = 0
 for h in couples:
 	difference = abs(int(h[0][4:6]) - int(h[1][4:6]))
 	agedifference = agedifference + difference
+print('Average age difference between parents:',agedifference/len(couples))
 # task 8
 parents_list = fathers + mothers
 grand_children = set()
@@ -244,6 +231,7 @@ for j in parents_list:
 		grands= people[j]["children"]
 		for gr in grands:
 			grand_children.add(gr)
+print(' % of people who has at least one alive grandparent:', (len(grand_children)*100)/len(people))
 # task 9
 cousins_sum = 0
 cousin_owners = 0
@@ -288,7 +276,7 @@ for honey in grand_children:
 	if cousins_set != set():
 		cousins_sum= cousins_sum + (len(cousins_set))
 		cousin_owners += 1
-avg_cousins = cousins_sum / cousin_owners
+print(' average # cousins:', cousins_sum / cousin_owners)
 # task 10
 boys = 0
 girls = 0 
@@ -297,6 +285,7 @@ for first in first_born:
 		boys +=1
 	elif int(first[-1]) % 2 == 0:
 		girls +=1
+print('first born gender distribution:', boys*100/len(first_born), '% boy', girls*100/len(first_born), '%girl')
 # task 11
 duo_fathers = 0
 duo_mothers = 0
@@ -316,6 +305,7 @@ for mother in mothers:
 			papa.add(children[kid]["father"])
 	if len(papa) > 1:
 		duo_mothers += 1
+print('parents who have children from different partners:', duo_fathers*100/len(fathers), '% of fathers', duo_mothers*100/len(mothers), '% of mothers')
 # task 12
 share = set()
 for k in children: 
@@ -351,6 +341,8 @@ for l in share:
 	elif ff_surname == '' and mf_surname != '' and mf_surname != ff_surname:
 		if mf_surname == people[l[0]]["last_name"]:
 			from_woman += 1
+print('percentage of parents who share family name: %', len(share)*100/len(couples))
+print('family name from woman, from man or none', from_woman, from_man, none_of)
 #task 13-16
 tall_tall = 0
 tall_normal = 0
@@ -443,6 +435,10 @@ for m in couples:
 		normals += 1
 	elif man_w == 'slim' and woman_w == 'slim':
 		slim_slim += 1
+print('height distribution:', '\n', 'tall_tall: %', tall_tall*100/len(couples), '\n', 'tall_normal: %', tall_normal*100/len(couples), '\n', 'tall_short: %', tall_short*100/len(couples), '\n','normal_normal: %', normal_normal*100/len(couples), '\n', 'normal_short: %', normal_short*100/len(couples), '\n', 'short_short: %', short_short*100/len(couples))
+print('tall children percentage from tall parents: %', tall_kids*100/kids_from_talls)
+print('weight distribution:', '\n', 'fat_fat: %', fat_fat*100/len(couples), '\n', 'fat_normal: %', fat_normal*100/len(couples), '\n', 'fat_slim: %', fat_slim*100/len(couples), '\n','normal_normal: %', normals*100/len(couples), '\n', 'normal_slim: %', normal_slim*100/len(couples), '\n', 'slim_slim: %', slim_slim*100/len(couples))
+print('fat children percentage from fat parents: %', fat_kids*100/kids_from_fats)
 # task 17 and 18
 adopted = list()
 donor_fathers= {}
@@ -489,6 +485,8 @@ for n in children:
 				donor_fathers[donor_father] = { 'father_blood_type': father_blood, 'sons_and_blood_types': [son]}
 			else:
 				donor_fathers[donor_father]['sons_and_blood_types'] += [son]
+print('Children with not real parents:', '\n', adopted)
+print('Donor fathers and their sons:', '\n', donor_fathers)
 # task 19
 donor_grandchildren = {}
 for o in grand_children:
@@ -605,6 +603,7 @@ for o in grand_children:
 					donor_grandchildren[o] = { 'grandchildren_blood_type': o_blood, 'grandparents_and_blood_types': [grandparent]}
 				else:
 					donor_grandchildren[o]['grandparents_and_blood_types'] += [grandparent]
+print('Donor grandchildren are:', '\n', donor_grandchildren)
 # task 20 
 A_pos = 0
 A_neg = 0
@@ -632,13 +631,4 @@ for p in people:
 		O_pos += 1
 	elif p_blood == 'O-':
 		O_neg += 1
-
-
-
-
-
-#print(age_min)
-#print(age_max)
-#print(age_sum)
-#average = age_sum / len(cpr_list)
-#print(average)
+print('Blood type distribution:', '\n', 'A+ : %', A_pos*100/len(people), '\n', 'A- : %', A_neg*100/len(people), '\n', 'B+ : %', B_pos*100/len(people), '\n', 'B- : %', B_neg*100/len(people), '\n', 'AB+ : %', AB_pos*100/len(people), '\n', 'AB- : %', AB_neg*100/len(people), '\n', '0+ : %', O_pos*100/len(people), '\n', '0- : %', O_neg*100/len(people))
