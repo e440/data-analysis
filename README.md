@@ -9,7 +9,7 @@ try:
 except IOError as e:
 	sys.stderr.write(str(error) + '\n')
 	sys.exit(1)
-#Read file, line by line and import to dictionary 
+#Read file, line by line and classify data  
 children = ('None')
 cpr = ''
 name = ''
@@ -45,12 +45,12 @@ for line in infile:
 		height = ''
 		weight =''
 		blood_type = ''
-# initializing dictionary names (cpr numbers) and add into a list  
+# initializing dictionaries for each person and adding them into main dictinoary
 if cpr !='':
 	people[cpr]={"name": name, "last_name": last_name, "height": height, "weight": weight, "blood_type": blood_type, "children": children}
 infile.close()
 cpr_list=list(people.keys())
-# define ranges, lists 
+# define ranges, lists , sets, dictionary for tasks from 1 to 6
 sum_women = 0
 sum_men = 0
 age20= 0
@@ -85,7 +85,7 @@ mothers = list()
 first_born = set()
 children_set = set()
 children = {}
-# control age ranges 
+# control age ranges (we know the data contains people who were born in 1900s) 
 for i in cpr_list:
 	age= 2018 - (1900 +int(i[4:6]))
 	age_sum = age_sum + age
@@ -113,12 +113,14 @@ for i in cpr_list:
 		age80 +=1
 	elif age >80:
 		age80over +=1	
-# and gender and if has children for females and firstborn child
+# check gender distribution 
 	if int(i[-1]) % 2 == 0:
 		sum_women +=1
+# if she is a mother or not 
 		chi = people[i]["children"]
 		if chi == 'None':
 			non_mothers += 1
+# if she is a mother what is first motherhood age( max, min and avg ) and who is first born
 		else:
 			mothers[-1:-1] = [i]
 			first_born_date = ''
@@ -152,7 +154,7 @@ for i in cpr_list:
 			elif motherhood_age <=50 and motherhood_age >40:
 				f_age40over +=1
 	
-# and the same for males
+# and the same for males (if a father, fatherhood age : min max avg) 
 	elif int(i[-1]) % 2 == 1:
 		sum_men +=1
 		chi = people[i]["children"]
@@ -200,7 +202,7 @@ print('Age distribution of fatherhood:','\n', 'Age <= 20: %',(m_age20*100)/len(f
 print('Age distribution of motherhood:','\n', 'Age <= 20: %',(f_age20*100)/len(mothers), '\n', '20<age<=30: %', (f_age30*100)/len(mothers), '\n', '30<age<=40: %', (f_age40*100)/len(mothers), '\n', '40<age %', (f_age40over*100)/len(mothers)) 
 print((non_fathers*100)/sum_men, ' percentage of men do not have children')
 print((non_mothers*100)/sum_women, ' percentage of women do not have children')
-# task 7
+# initializing a new dictionary for each children show parents
 for b in children_set:
 	children[b] = {"mother": '', "father": ''}
 for c in fathers:
@@ -211,18 +213,20 @@ for e in mothers:
 	ds = people[e]["children"]
 	for f in ds:
 		children[f]["mother"] = e
+# find couples (marriages) 
 couples = set()
 for g in children:
 	fath = children[g]["father"]
 	moth = children[g]["mother"]
 	parents = fath, moth
 	couples.add(parents)
+# calculate age difference between parents (we use couples set for avoiding duplicates, couples who have more than 1 children) 
 agedifference = 0
 for h in couples:
 	difference = abs(int(h[0][4:6]) - int(h[1][4:6]))
 	agedifference = agedifference + difference
 print('Average age difference between parents:',agedifference/len(couples))
-# task 8
+# find who are grand children in database (if a person is both in parents and children list: children of this person should be a grandchildren of this person's parents)
 parents_list = fathers + mothers
 grand_children = set()
 gr = 0
@@ -232,7 +236,7 @@ for j in parents_list:
 		for gr in grands:
 			grand_children.add(gr)
 print(' % of people who has at least one alive grandparent:', (len(grand_children)*100)/len(people))
-# task 9
+# to see total number of cousins you should first go up to grand parents and than down to uncles and aunts
 cousins_sum = 0
 cousin_owners = 0
 for honey in grand_children:
@@ -277,7 +281,7 @@ for honey in grand_children:
 		cousins_sum= cousins_sum + (len(cousins_set))
 		cousin_owners += 1
 print(' average # cousins:', cousins_sum / cousin_owners)
-# task 10
+# gender distribution of first born 
 boys = 0
 girls = 0 
 for first in first_born:
@@ -286,7 +290,7 @@ for first in first_born:
 	elif int(first[-1]) % 2 == 0:
 		girls +=1
 print('first born gender distribution:', boys*100/len(first_born), '% boy', girls*100/len(first_born), '%girl')
-# task 11
+# check for all fathers and mothers how many partners they have (use children)
 duo_fathers = 0
 duo_mothers = 0
 for father in fathers:
@@ -306,7 +310,7 @@ for mother in mothers:
 	if len(papa) > 1:
 		duo_mothers += 1
 print('parents who have children from different partners:', duo_fathers*100/len(fathers), '% of fathers', duo_mothers*100/len(mothers), '% of mothers')
-# task 12
+# for each children check parents' surname if they are same 
 share = set()
 for k in children: 
 	mother = children[k]["mother"]
@@ -316,6 +320,7 @@ for k in children:
 	if mot_surname == fat_surname:
 		couple = father, mother
 		share.add(couple)
+# if surnames are same check origin of this surname ( if come from woman or man also it is possible to have same surname before marriage
 none_of = 0
 from_man= 0
 from_woman = 0
@@ -343,7 +348,7 @@ for l in share:
 			from_woman += 1
 print('percentage of parents who share family name: %', len(share)*100/len(couples))
 print('family name from woman, from man or none', from_woman, from_man, none_of)
-#task 13-16
+# define counters for height and weight possibilities 
 tall_tall = 0
 tall_normal = 0
 tall_short = 0
@@ -360,6 +365,7 @@ normal_slim = 0
 slim_slim = 0
 fat_kids = 0
 kids_from_fats = 0
+# go through couples categorize them
 for m in couples:
 	man = ''
 	man_height = int(people[m[0]]["height"])
@@ -385,6 +391,7 @@ for m in couples:
 		woman = 'short'
 	if man == 'tall' and woman == 'tall':
 		tall_tall += 1
+# find children of tall parents and see if they are tall
 		kids = people[m[0]]['children']
 		for kid in kids:
 			kids_from_talls += 1
@@ -417,6 +424,7 @@ for m in couples:
 		woman_w = 'fat'
 	if man_w == 'fat' and woman_w == 'fat':
 		fat_fat += 1
+# find children of fat parents and see if they are fat
 		kids = people[m[0]]['children']
 		for kid in kids:
 			kids_from_fats += 1
@@ -439,9 +447,10 @@ print('height distribution:', '\n', 'tall_tall: %', tall_tall*100/len(couples), 
 print('tall children percentage from tall parents: %', tall_kids*100/kids_from_talls)
 print('weight distribution:', '\n', 'fat_fat: %', fat_fat*100/len(couples), '\n', 'fat_normal: %', fat_normal*100/len(couples), '\n', 'fat_slim: %', fat_slim*100/len(couples), '\n','normal_normal: %', normals*100/len(couples), '\n', 'normal_slim: %', normal_slim*100/len(couples), '\n', 'slim_slim: %', slim_slim*100/len(couples))
 print('fat children percentage from fat parents: %', fat_kids*100/kids_from_fats)
-# task 17 and 18
+# comparision of blood types 
 adopted = list()
 donor_fathers= {}
+# for each children check blood type and parents' blood type, see which are not possible according to genetic inheritance
 for n in children:
 	child_blood = people[n]['blood_type']
 	mother_blood = people[children[n]['mother']]['blood_type']
@@ -456,6 +465,7 @@ for n in children:
 		adopted[-1:-1] = [n]
 	elif mother_blood[-1] == '-' and father_blood[-1] == '-' and child_blood[-1] == '+':
 		adopted[-1:-1] = [n]
+# we know father and son blood types ask if father can donate blood to his son(s)
 	if int(n[-1]) % 2 == 1 and ((child_blood[-1] == '+') or (father_blood[-1] == '-' and child_blood[-1] == '-')) :
 		if father_blood[:-1] == 'A' and (child_blood[:-1] == 'A' or child_blood[:-1] == 'AB'):
 			donor_father= children[n]['father']
@@ -487,7 +497,7 @@ for n in children:
 				donor_fathers[donor_father]['sons_and_blood_types'] += [son]
 print('Children with not real parents:', '\n', adopted)
 print('Donor fathers and their sons:', '\n', donor_fathers)
-# task 19
+# similar to previous one, this time donors are grandchildren important to go through mother and father
 donor_grandchildren = {}
 for o in grand_children:
 	o_blood = people[o]['blood_type']
@@ -604,7 +614,7 @@ for o in grand_children:
 				else:
 					donor_grandchildren[o]['grandparents_and_blood_types'] += [grandparent]
 print('Donor grandchildren are:', '\n', donor_grandchildren)
-# task 20 
+# blood type distribution
 A_pos = 0
 A_neg = 0
 B_pos = 0
@@ -632,3 +642,4 @@ for p in people:
 	elif p_blood == 'O-':
 		O_neg += 1
 print('Blood type distribution:', '\n', 'A+ : %', A_pos*100/len(people), '\n', 'A- : %', A_neg*100/len(people), '\n', 'B+ : %', B_pos*100/len(people), '\n', 'B- : %', B_neg*100/len(people), '\n', 'AB+ : %', AB_pos*100/len(people), '\n', 'AB- : %', AB_neg*100/len(people), '\n', '0+ : %', O_pos*100/len(people), '\n', '0- : %', O_neg*100/len(people))
+
